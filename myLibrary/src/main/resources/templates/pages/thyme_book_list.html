@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Books</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+	<div th:switch="${books}" class="container my-2">
+		<h2 th:case=null class="container my-5">Arşivde Kitap Yok</h2>
+		<div th:case=*>
+			<h1>Kitap Listem</h1>
+			<form action="/thyme/book/list" class="from-inline" method="POST">
+				<div class="form-group mb-2">
+					<input type="text" class="form-control" name="title" placeholder="Kitap Ara"/>
+					<input type="submit" value="Search" class="btn btn-primary"/>
+				</div>
+			</form>
+			<table class="table table-striped table-responsive-md">
+				<thead>
+					<tr>
+						<th>Title</th>
+						<th>Authors</th>
+						<th>Categories</th>
+						<th>Description</th>
+<!-- 						<th>Düzenle</th> -->
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="book : ${books}">
+						<td th:text="${book.title}"></td>
+                        <td>
+							<option th:each="author : ${book.authors}" th:value="${author.authorNo}" th:text="${author.authorName}"/>
+							<a th:href="@{/thyme/author/add/{bookNo}(bookNo=${book.bookNo})}" class="btn">+</a>
+						</td>
+                        <td>
+							<option th:each="category : ${book.categories}" th:value="${category.categoryNo}" th:text="${category.categoryName}"/>
+							<a th:href="@{/thyme/category/add/{bookNo}(bookNo=${book.bookNo})}" class="btn">+</a>
+						</td>
+						<td th:text="${book.description}"></td>
+<!-- 						<td><a th:href="@{/thyme/book/edit/{bookNo}(bookNo=${book.bookNo})}" class="btn btn-primary">Düzenle</a></td> -->
+					</tr>
+				</tbody>
+			</table>
+			<p class="my-5"><a href="/thyme/book/add" class="btn btn-primary">Kitap Ekle</a></p>
+		</div>
+	</div>
+</body>
+</html>
